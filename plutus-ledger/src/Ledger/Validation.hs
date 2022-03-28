@@ -42,7 +42,7 @@ import Cardano.Ledger.Alonzo.PParams (PParams' (..))
 import Cardano.Ledger.Alonzo.Rules.Utxos (constructValidated)
 import Cardano.Ledger.Alonzo.Tx (ValidatedTx (ValidatedTx))
 import Cardano.Ledger.Alonzo.TxWitness (txwitsVKey)
-import Cardano.Ledger.BaseTypes (Globals (..))
+import Cardano.Ledger.BaseTypes (Globals (..), TxIx (TxIx))
 import Cardano.Ledger.Core (PParams, Tx)
 import Cardano.Ledger.Crypto (StandardCrypto)
 import Cardano.Ledger.Shelley.API (Coin (..), LedgerEnv (..), MempoolEnv, MempoolState, NewEpochState, TxId,
@@ -66,8 +66,8 @@ import Ledger.Index qualified as P
 import Ledger.Tx qualified as P
 import Ledger.Tx.CardanoAPI qualified as P
 import Ledger.Value qualified as P
-import Plutus.V1.Ledger.Ada qualified as P
-import Plutus.V1.Ledger.TxId qualified as P
+import Legacy.Plutus.V1.Ledger.Ada qualified as P
+import Legacy.Plutus.V2.Ledger.Tx qualified as P
 
 type EmulatorBlock = [Validated (Tx EmulatorEra)]
 
@@ -247,7 +247,7 @@ fromPlutusIndex (P.UtxoIndex m) = (\utxo -> smartUTxOState utxo (Coin 0) (Coin 0
   (UTxO . Map.fromList <$> traverse (bitraverse fromPlutusTxOutRef fromPlutusTxOut) (Map.toList m))
 
 fromPlutusTxOutRef :: P.TxOutRef -> Either P.ToCardanoError (TxIn StandardCrypto)
-fromPlutusTxOutRef (P.TxOutRef txId i) = TxIn <$> fromPlutusTxId txId <*> pure (fromInteger i)
+fromPlutusTxOutRef (P.TxOutRef txId i) = TxIn <$> fromPlutusTxId txId <*> pure (TxIx $ fromInteger i)
 
 fromPlutusTxId :: P.TxId -> Either P.ToCardanoError (TxId StandardCrypto)
 fromPlutusTxId = fmap toShelleyTxId . P.toCardanoTxId

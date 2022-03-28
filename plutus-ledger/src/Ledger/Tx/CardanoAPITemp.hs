@@ -33,6 +33,8 @@ import Cardano.Ledger.Keys qualified as Shelley
 import Cardano.Ledger.Shelley.Tx qualified as Shelley
 import Cardano.Ledger.Shelley.TxBody qualified as Shelley
 
+import Cardano.Ledger.Alonzo.PParams ( PParams'(_costmdls) )
+
 makeTransactionBody' :: TxBodyContent BuildTx AlonzoEra -> Either TxBodyError (TxBody AlonzoEra)
 makeTransactionBody'
     txbodycontent@TxBodyContent {
